@@ -1,0 +1,1245 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>MangaMeals – High Protein Anime Food</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Noto+Sans+JP:wght@400;700&family=Permanent+Marker&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+<style>
+  :root {
+    --red: #E8393A;
+    --red-dark: #B82C2C;
+    --ink: #0E0E0E;
+    --cream: #FAF6EF;
+    --cream2: #F2EBD9;
+    --gold: #D4A017;
+    --white: #FFFFFF;
+    --gray: #6B6B6B;
+    --panel-bg: #1A1A1A;
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{font-family:'DM Sans',sans-serif;background:var(--cream);color:var(--ink);overflow-x:hidden;}
+
+  /* MANGA PANEL BORDERS */
+  .manga-panel{position:relative;}
+  .manga-panel::before{
+    content:'';position:absolute;inset:0;
+    border:3px solid var(--ink);
+    pointer-events:none;z-index:2;
+  }
+
+  /* SPEED LINES BACKGROUND */
+  .speed-bg{
+    background: radial-gradient(ellipse at center, #FAF6EF 0%, #F2EBD9 40%, #E8DFC8 100%);
+    position:relative;overflow:hidden;
+  }
+  .speed-bg::before{
+    content:'';position:absolute;inset:0;
+    background-image: repeating-conic-gradient(
+      rgba(0,0,0,0.04) 0deg 1deg,
+      transparent 1deg 6deg
+    );
+    transform-origin:center;
+  }
+
+  /* NAV */
+  nav{
+    position:fixed;top:0;left:0;right:0;z-index:100;
+    background:var(--ink);
+    border-bottom:3px solid var(--red);
+    display:flex;align-items:center;justify-content:space-between;
+    padding:0 2rem;height:64px;
+  }
+  .nav-logo{
+    font-family:'Bebas Neue',sans-serif;
+    font-size:2rem;letter-spacing:3px;
+    color:var(--white);display:flex;align-items:center;gap:8px;
+  }
+  .nav-logo span{color:var(--red);}
+  .nav-links{display:flex;gap:2rem;list-style:none;}
+  .nav-links a{
+    color:rgba(255,255,255,0.8);text-decoration:none;
+    font-size:0.85rem;font-weight:500;letter-spacing:1px;
+    text-transform:uppercase;transition:color 0.2s;
+  }
+  .nav-links a:hover{color:var(--red);}
+  .nav-cta{
+    background:var(--red);color:var(--white);
+    border:none;padding:0.5rem 1.2rem;
+    font-family:'DM Sans',sans-serif;font-weight:600;
+    font-size:0.85rem;letter-spacing:1px;text-transform:uppercase;
+    cursor:pointer;transition:background 0.2s;
+    clip-path:polygon(0 0,100% 0,96% 100%,0 100%);
+  }
+  .nav-cta:hover{background:var(--red-dark);}
+
+  /* HERO */
+  .hero{
+    min-height:100vh;padding-top:64px;
+    display:grid;grid-template-columns:1fr 1fr;
+    background:var(--ink);position:relative;overflow:hidden;
+  }
+  .hero-halftone{
+    position:absolute;inset:0;
+    background-image:radial-gradient(circle, rgba(232,57,58,0.15) 1px, transparent 1px);
+    background-size:20px 20px;
+  }
+  .hero-left{
+    padding:5rem 3rem 3rem;
+    display:flex;flex-direction:column;justify-content:center;
+    position:relative;z-index:2;
+  }
+  .hero-tag{
+    display:inline-flex;align-items:center;gap:8px;
+    background:var(--red);color:var(--white);
+    font-size:0.75rem;font-weight:600;letter-spacing:2px;text-transform:uppercase;
+    padding:6px 14px;margin-bottom:1.5rem;width:fit-content;
+    clip-path:polygon(0 0,100% 0,95% 100%,0 100%);
+  }
+  .hero-title{
+    font-family:'Bebas Neue',sans-serif;
+    font-size:clamp(4rem,8vw,7rem);
+    line-height:0.9;color:var(--white);
+    letter-spacing:2px;margin-bottom:0.5rem;
+  }
+  .hero-title .accent{color:var(--red);}
+  .hero-subtitle{
+    font-family:'Noto Sans JP',sans-serif;
+    font-size:0.9rem;color:rgba(255,255,255,0.5);
+    letter-spacing:4px;margin-bottom:1.5rem;
+  }
+  .hero-desc{
+    font-size:1.05rem;color:rgba(255,255,255,0.75);
+    line-height:1.7;max-width:420px;margin-bottom:2.5rem;
+  }
+  .hero-btns{display:flex;gap:1rem;flex-wrap:wrap;}
+  .btn-primary{
+    background:var(--red);color:var(--white);
+    border:none;padding:1rem 2rem;
+    font-family:'DM Sans',sans-serif;font-weight:600;
+    font-size:1rem;cursor:pointer;transition:all 0.2s;
+    clip-path:polygon(0 0,100% 0,96% 100%,4% 100%);
+    text-decoration:none;display:inline-block;
+  }
+  .btn-primary:hover{background:var(--red-dark);transform:translateY(-2px);}
+  .btn-secondary{
+    background:transparent;color:var(--white);
+    border:2px solid rgba(255,255,255,0.3);padding:1rem 2rem;
+    font-family:'DM Sans',sans-serif;font-weight:500;
+    font-size:1rem;cursor:pointer;transition:all 0.2s;
+    text-decoration:none;display:inline-block;
+  }
+  .btn-secondary:hover{border-color:var(--red);color:var(--red);}
+
+  .hero-stats{
+    display:flex;gap:2rem;margin-top:3rem;
+    border-top:1px solid rgba(255,255,255,0.1);padding-top:2rem;
+  }
+  .hero-stat strong{
+    display:block;font-family:'Bebas Neue',sans-serif;
+    font-size:2rem;color:var(--red);
+  }
+  .hero-stat span{font-size:0.8rem;color:rgba(255,255,255,0.5);text-transform:uppercase;letter-spacing:1px;}
+
+  .hero-right{
+    position:relative;z-index:2;
+    display:flex;align-items:center;justify-content:center;padding:2rem;
+  }
+  .hero-comic{
+    display:grid;grid-template-columns:1fr 1fr;
+    grid-template-rows:1fr 1fr;gap:6px;
+    width:100%;max-width:480px;
+    border:4px solid var(--white);
+  }
+  .comic-panel{
+    background:var(--panel-bg);overflow:hidden;
+    position:relative;min-height:160px;
+    display:flex;align-items:center;justify-content:center;
+    border:2px solid rgba(255,255,255,0.1);
+  }
+  .comic-panel.tall{grid-row:span 2;}
+  .panel-emoji{font-size:4rem;filter:grayscale(30%);}
+  .panel-label{
+    position:absolute;bottom:8px;left:8px;right:8px;
+    background:var(--red);color:var(--white);
+    font-family:'Bebas Neue',sans-serif;font-size:1rem;
+    letter-spacing:1px;padding:4px 8px;text-align:center;
+  }
+  .sfx{
+    position:absolute;top:8px;right:8px;
+    font-family:'Permanent Marker',cursive;
+    font-size:1.5rem;color:var(--gold);
+    transform:rotate(-8deg);
+  }
+
+  /* SECTION COMMON */
+  section{padding:6rem 2rem;}
+  .section-header{text-align:center;margin-bottom:4rem;}
+  .section-tag{
+    display:inline-block;
+    background:var(--red);color:var(--white);
+    font-size:0.75rem;font-weight:600;letter-spacing:2px;text-transform:uppercase;
+    padding:5px 14px;margin-bottom:1rem;
+  }
+  .section-title{
+    font-family:'Bebas Neue',sans-serif;
+    font-size:clamp(2.5rem,5vw,4rem);
+    letter-spacing:2px;line-height:1;
+  }
+  .section-sub{
+    font-size:1rem;color:var(--gray);margin-top:0.75rem;max-width:500px;margin-inline:auto;
+  }
+
+  /* FEATURED BOOKS */
+  .books-grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(280px,1fr));
+    gap:2px;max-width:1200px;margin:0 auto;
+  }
+  .book-card{
+    background:var(--white);
+    border:3px solid var(--ink);
+    position:relative;overflow:hidden;cursor:pointer;
+    transition:transform 0.2s;
+  }
+  .book-card:hover{transform:translate(-4px,-4px);box-shadow:6px 6px 0 var(--ink);}
+  .book-cover{
+    height:220px;display:flex;align-items:center;justify-content:center;
+    font-size:5rem;position:relative;overflow:hidden;
+  }
+  .book-cover.red{background:var(--red);}
+  .book-cover.dark{background:var(--ink);}
+  .book-cover.gold{background:var(--gold);}
+  .book-cover.cream{background:var(--cream2);}
+  .book-badge{
+    position:absolute;top:12px;right:12px;
+    background:var(--white);color:var(--ink);
+    font-family:'Bebas Neue',sans-serif;font-size:0.9rem;
+    padding:4px 10px;border:2px solid var(--ink);
+    letter-spacing:1px;
+  }
+  .book-badge.new{background:var(--red);color:var(--white);}
+  .book-info{padding:1.25rem;}
+  .book-series{
+    font-size:0.75rem;font-weight:600;color:var(--red);
+    text-transform:uppercase;letter-spacing:2px;margin-bottom:4px;
+  }
+  .book-title{
+    font-family:'Bebas Neue',sans-serif;font-size:1.4rem;
+    letter-spacing:1px;margin-bottom:0.5rem;line-height:1.1;
+  }
+  .book-meta{
+    display:flex;align-items:center;gap:8px;
+    font-size:0.8rem;color:var(--gray);margin-bottom:1rem;
+  }
+  .protein-badge{
+    background:var(--ink);color:var(--white);
+    font-size:0.7rem;font-weight:600;padding:3px 8px;letter-spacing:1px;
+  }
+  .book-footer{
+    display:flex;align-items:center;justify-content:space-between;
+    border-top:2px solid var(--ink);padding-top:1rem;
+  }
+  .book-price{
+    font-family:'Bebas Neue',sans-serif;font-size:1.6rem;letter-spacing:1px;
+  }
+  .btn-buy{
+    background:var(--ink);color:var(--white);
+    border:none;padding:0.5rem 1.25rem;
+    font-weight:600;font-size:0.85rem;cursor:pointer;
+    transition:background 0.2s;letter-spacing:1px;text-transform:uppercase;
+    clip-path:polygon(0 0,100% 0,94% 100%,0 100%);
+  }
+  .btn-buy:hover{background:var(--red);}
+
+  /* ANIME SERIES SECTION */
+  .series-section{background:var(--ink);color:var(--white);}
+  .series-grid{
+    display:flex;gap:0;max-width:1200px;margin:0 auto;
+    border:3px solid rgba(255,255,255,0.2);
+  }
+  .series-item{
+    flex:1;padding:2rem 1.5rem;
+    border-right:2px solid rgba(255,255,255,0.1);
+    position:relative;overflow:hidden;cursor:pointer;
+    transition:background 0.2s;
+  }
+  .series-item:last-child{border-right:none;}
+  .series-item:hover{background:rgba(232,57,58,0.1);}
+  .series-item::before{
+    content:'';position:absolute;bottom:0;left:0;right:0;height:3px;
+    background:var(--red);transform:scaleX(0);transition:transform 0.3s;
+  }
+  .series-item:hover::before{transform:scaleX(1);}
+  .series-icon{font-size:2.5rem;margin-bottom:1rem;}
+  .series-name{
+    font-family:'Bebas Neue',sans-serif;font-size:1.3rem;
+    letter-spacing:2px;margin-bottom:0.5rem;color:var(--white);
+  }
+  .series-jp{
+    font-family:'Noto Sans JP',sans-serif;
+    font-size:0.75rem;color:rgba(255,255,255,0.4);
+    margin-bottom:0.75rem;
+  }
+  .series-count{
+    font-size:0.8rem;color:var(--red);font-weight:600;letter-spacing:1px;
+  }
+
+  /* ABOUT / MANIFESTO */
+  .manifesto{
+    background:var(--red);color:var(--white);
+    padding:6rem 2rem;text-align:center;
+    position:relative;overflow:hidden;
+  }
+  .manifesto::before{
+    content:'食';
+    position:absolute;font-family:'Noto Sans JP',sans-serif;
+    font-size:30rem;font-weight:700;
+    color:rgba(255,255,255,0.04);
+    top:50%;left:50%;transform:translate(-50%,-50%);
+    pointer-events:none;
+  }
+  .manifesto h2{
+    font-family:'Bebas Neue',sans-serif;
+    font-size:clamp(3rem,7vw,6rem);
+    letter-spacing:3px;line-height:0.9;
+    margin-bottom:2rem;position:relative;
+  }
+  .manifesto p{
+    font-size:1.2rem;max-width:600px;margin:0 auto 2rem;
+    line-height:1.7;opacity:0.9;position:relative;
+  }
+
+  /* HOW IT WORKS */
+  .steps{display:flex;gap:0;max-width:900px;margin:0 auto;position:relative;}
+  .steps::before{
+    content:'';position:absolute;top:40px;left:60px;right:60px;height:3px;
+    background:var(--ink);z-index:0;
+  }
+  .step{flex:1;text-align:center;padding:0 1rem;position:relative;z-index:1;}
+  .step-num{
+    width:80px;height:80px;
+    background:var(--ink);color:var(--white);
+    font-family:'Bebas Neue',sans-serif;font-size:2.5rem;
+    display:flex;align-items:center;justify-content:center;
+    margin:0 auto 1.5rem;border:3px solid var(--ink);
+  }
+  .step:nth-child(2) .step-num{background:var(--red);}
+  .step h3{font-family:'Bebas Neue',sans-serif;font-size:1.3rem;letter-spacing:1px;margin-bottom:0.5rem;}
+  .step p{font-size:0.9rem;color:var(--gray);line-height:1.6;}
+
+  /* SAMPLE RECIPES */
+  .recipes-section{background:var(--cream2);}
+  .recipe-grid{
+    display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));
+    gap:2px;max-width:1200px;margin:0 auto;
+    border:3px solid var(--ink);
+  }
+  .recipe-card{
+    background:var(--white);padding:1.5rem;
+    border-right:2px solid var(--ink);
+    border-bottom:2px solid var(--ink);
+  }
+  .recipe-card:hover{background:var(--cream);}
+  .recipe-header{display:flex;align-items:flex-start;gap:1rem;margin-bottom:1rem;}
+  .recipe-icon{font-size:2.5rem;}
+  .recipe-source{
+    font-size:0.7rem;font-weight:600;color:var(--red);
+    text-transform:uppercase;letter-spacing:2px;
+  }
+  .recipe-name{font-family:'Bebas Neue',sans-serif;font-size:1.5rem;letter-spacing:1px;line-height:1.1;}
+  .recipe-tags{display:flex;gap:6px;flex-wrap:wrap;margin:0.75rem 0;}
+  .tag{
+    font-size:0.7rem;font-weight:600;padding:3px 10px;letter-spacing:1px;
+    text-transform:uppercase;
+  }
+  .tag.protein{background:var(--ink);color:var(--white);}
+  .tag.time{background:var(--cream2);color:var(--ink);border:1px solid var(--ink);}
+  .tag.diff{background:var(--red);color:var(--white);}
+  .recipe-macros{
+    display:grid;grid-template-columns:repeat(3,1fr);
+    gap:4px;margin-top:1rem;
+  }
+  .macro{background:var(--cream2);padding:8px;text-align:center;}
+  .macro strong{display:block;font-family:'Bebas Neue',sans-serif;font-size:1.4rem;color:var(--red);}
+  .macro span{font-size:0.65rem;text-transform:uppercase;letter-spacing:1px;color:var(--gray);}
+
+  /* BUNDLE SECTION */
+  .bundle-section{background:var(--ink);color:var(--white);padding:6rem 2rem;}
+  .bundle-grid{
+    display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));
+    gap:3px;max-width:1100px;margin:0 auto;
+  }
+  .bundle-card{
+    border:2px solid rgba(255,255,255,0.15);
+    padding:2rem;position:relative;transition:border-color 0.2s;
+  }
+  .bundle-card:hover{border-color:var(--red);}
+  .bundle-card.featured{border-color:var(--red);border-width:3px;}
+  .featured-tag{
+    position:absolute;top:-14px;left:50%;transform:translateX(-50%);
+    background:var(--red);color:var(--white);
+    font-family:'Bebas Neue',sans-serif;font-size:0.9rem;letter-spacing:2px;
+    padding:4px 16px;white-space:nowrap;
+  }
+  .bundle-name{font-family:'Bebas Neue',sans-serif;font-size:1.8rem;letter-spacing:2px;margin-bottom:0.25rem;}
+  .bundle-jp{font-family:'Noto Sans JP',sans-serif;font-size:0.8rem;color:rgba(255,255,255,0.4);margin-bottom:1.5rem;}
+  .bundle-price{
+    font-family:'Bebas Neue',sans-serif;font-size:3.5rem;letter-spacing:2px;
+    color:var(--red);line-height:1;margin-bottom:0.25rem;
+  }
+  .bundle-period{font-size:0.8rem;color:rgba(255,255,255,0.4);margin-bottom:2rem;letter-spacing:1px;}
+  .bundle-features{list-style:none;margin-bottom:2rem;}
+  .bundle-features li{
+    padding:8px 0;border-bottom:1px solid rgba(255,255,255,0.08);
+    font-size:0.9rem;display:flex;align-items:center;gap:8px;
+  }
+  .bundle-features li::before{
+    content:'▶';font-size:0.6rem;color:var(--red);flex-shrink:0;
+  }
+  .btn-bundle{
+    width:100%;background:transparent;color:var(--white);
+    border:2px solid rgba(255,255,255,0.3);padding:0.9rem;
+    font-weight:600;font-size:0.9rem;cursor:pointer;letter-spacing:1px;
+    text-transform:uppercase;transition:all 0.2s;
+  }
+  .btn-bundle:hover,.bundle-card.featured .btn-bundle{
+    background:var(--red);border-color:var(--red);
+  }
+
+  /* TESTIMONIALS */
+  .testi-section{padding:6rem 2rem;background:var(--cream);}
+  .testi-grid{
+    display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));
+    gap:2px;max-width:1100px;margin:0 auto;
+    border:3px solid var(--ink);
+  }
+  .testi-card{
+    background:var(--white);padding:2rem;
+    border-right:2px solid var(--ink);
+    position:relative;
+  }
+  .testi-quote{
+    font-family:'Permanent Marker',cursive;
+    font-size:4rem;color:var(--red);line-height:0.8;margin-bottom:1rem;
+  }
+  .testi-text{font-size:0.95rem;line-height:1.7;color:var(--ink);margin-bottom:1.5rem;}
+  .testi-author{display:flex;align-items:center;gap:12px;}
+  .testi-avatar{
+    width:44px;height:44px;background:var(--ink);
+    display:flex;align-items:center;justify-content:center;
+    font-size:1.4rem;flex-shrink:0;
+  }
+  .testi-name{font-weight:600;font-size:0.9rem;}
+  .testi-role{font-size:0.8rem;color:var(--gray);}
+  .stars{color:var(--gold);font-size:0.9rem;letter-spacing:2px;margin-bottom:0.5rem;}
+
+  /* FAQ */
+  .faq-section{background:var(--cream2);padding:6rem 2rem;}
+  .faq-list{max-width:800px;margin:0 auto;border:3px solid var(--ink);}
+  .faq-item{border-bottom:2px solid var(--ink);}
+  .faq-item:last-child{border-bottom:none;}
+  .faq-q{
+    padding:1.25rem 1.5rem;cursor:pointer;
+    display:flex;justify-content:space-between;align-items:center;
+    font-weight:600;font-size:1rem;transition:background 0.2s;
+    background:var(--white);
+  }
+  .faq-q:hover{background:var(--cream);}
+  .faq-icon{font-family:'Bebas Neue',sans-serif;font-size:1.5rem;color:var(--red);}
+  .faq-a{
+    padding:0 1.5rem;max-height:0;overflow:hidden;
+    transition:max-height 0.3s,padding 0.3s;
+    background:var(--cream);font-size:0.95rem;line-height:1.7;color:var(--gray);
+  }
+  .faq-item.open .faq-a{max-height:300px;padding:1rem 1.5rem;}
+  .faq-item.open .faq-icon{transform:rotate(45deg);}
+  .faq-icon{transition:transform 0.3s;}
+
+  /* FOOTER */
+  footer{background:var(--ink);color:var(--white);padding:4rem 2rem 2rem;}
+  .footer-grid{
+    display:grid;grid-template-columns:2fr 1fr 1fr 1fr;
+    gap:3rem;max-width:1200px;margin:0 auto 3rem;
+  }
+  .footer-brand .nav-logo{font-size:2.5rem;margin-bottom:1rem;}
+  .footer-brand p{font-size:0.9rem;color:rgba(255,255,255,0.5);line-height:1.7;margin-bottom:1.5rem;}
+  .footer-social{display:flex;gap:12px;}
+  .social-btn{
+    width:36px;height:36px;background:rgba(255,255,255,0.1);
+    display:flex;align-items:center;justify-content:center;
+    font-size:1rem;cursor:pointer;transition:background 0.2s;
+  }
+  .social-btn:hover{background:var(--red);}
+  .footer-col h4{
+    font-family:'Bebas Neue',sans-serif;font-size:1.1rem;letter-spacing:2px;
+    color:var(--red);margin-bottom:1.25rem;
+  }
+  .footer-col ul{list-style:none;}
+  .footer-col li{margin-bottom:0.75rem;}
+  .footer-col a{
+    color:rgba(255,255,255,0.5);text-decoration:none;
+    font-size:0.9rem;transition:color 0.2s;
+  }
+  .footer-col a:hover{color:var(--white);}
+  .footer-bottom{
+    border-top:1px solid rgba(255,255,255,0.1);
+    padding-top:2rem;max-width:1200px;margin:0 auto;
+    display:flex;align-items:center;justify-content:space-between;
+    flex-wrap:wrap;gap:1rem;
+  }
+  .footer-bottom p{font-size:0.8rem;color:rgba(255,255,255,0.35);}
+
+  /* CART SIDEBAR */
+  .cart-overlay{
+    position:fixed;inset:0;background:rgba(0,0,0,0.7);
+    z-index:200;opacity:0;pointer-events:none;transition:opacity 0.3s;
+  }
+  .cart-overlay.open{opacity:1;pointer-events:all;}
+  .cart-sidebar{
+    position:fixed;top:0;right:-420px;bottom:0;width:380px;
+    background:var(--white);z-index:201;
+    transition:right 0.3s;display:flex;flex-direction:column;
+    border-left:3px solid var(--ink);
+  }
+  .cart-overlay.open .cart-sidebar{right:0;}
+  .cart-header{
+    background:var(--ink);color:var(--white);
+    padding:1.25rem 1.5rem;display:flex;align-items:center;justify-content:space-between;
+    border-bottom:3px solid var(--red);
+  }
+  .cart-header h3{font-family:'Bebas Neue',sans-serif;font-size:1.5rem;letter-spacing:2px;}
+  .cart-close{
+    background:none;border:none;color:var(--white);
+    font-size:1.5rem;cursor:pointer;font-family:'Bebas Neue',sans-serif;
+  }
+  .cart-items{flex:1;overflow-y:auto;padding:1.5rem;}
+  .cart-item{
+    display:flex;gap:1rem;padding:1rem 0;
+    border-bottom:1px solid rgba(0,0,0,0.08);
+  }
+  .cart-item-icon{
+    width:60px;height:60px;
+    display:flex;align-items:center;justify-content:center;
+    font-size:2rem;background:var(--cream);border:2px solid var(--ink);flex-shrink:0;
+  }
+  .cart-item-info{flex:1;}
+  .cart-item-title{font-weight:600;font-size:0.9rem;margin-bottom:4px;}
+  .cart-item-price{color:var(--red);font-weight:700;}
+  .cart-remove{
+    background:none;border:none;color:var(--gray);
+    cursor:pointer;font-size:1.2rem;padding:0;
+    transition:color 0.2s;
+  }
+  .cart-remove:hover{color:var(--red);}
+  .cart-empty{
+    text-align:center;padding:3rem 1rem;color:var(--gray);
+  }
+  .cart-empty span{font-size:3rem;display:block;margin-bottom:1rem;}
+  .cart-footer{
+    padding:1.5rem;border-top:2px solid var(--ink);
+    background:var(--cream);
+  }
+  .cart-total{
+    display:flex;justify-content:space-between;align-items:center;
+    font-family:'Bebas Neue',sans-serif;font-size:1.5rem;letter-spacing:1px;
+    margin-bottom:1rem;
+  }
+  .btn-checkout{
+    width:100%;background:var(--red);color:var(--white);
+    border:none;padding:1rem;font-weight:600;font-size:1rem;
+    cursor:pointer;letter-spacing:1px;text-transform:uppercase;
+    clip-path:polygon(0 0,100% 0,96% 100%,4% 100%);
+    transition:background 0.2s;
+  }
+  .btn-checkout:hover{background:var(--red-dark);}
+
+  /* CART BADGE */
+  .cart-btn{
+    background:none;border:none;color:var(--white);
+    cursor:pointer;font-size:1.4rem;position:relative;
+    display:flex;align-items:center;gap:4px;
+  }
+  .cart-count{
+    position:absolute;top:-8px;right:-8px;
+    background:var(--red);color:var(--white);
+    width:18px;height:18px;border-radius:50%;
+    font-size:0.65rem;font-weight:700;
+    display:flex;align-items:center;justify-content:center;
+  }
+
+  /* ANNOUNCEMENT BAR */
+  .announce{
+    background:var(--red);color:var(--white);
+    text-align:center;padding:8px 1rem;
+    font-size:0.8rem;font-weight:600;letter-spacing:2px;
+    text-transform:uppercase;
+  }
+
+  /* TOAST */
+  .toast{
+    position:fixed;bottom:2rem;left:50%;transform:translateX(-50%) translateY(100px);
+    background:var(--ink);color:var(--white);
+    padding:0.75rem 1.5rem;font-weight:600;font-size:0.9rem;
+    border-left:4px solid var(--red);z-index:300;
+    transition:transform 0.3s;white-space:nowrap;
+  }
+  .toast.show{transform:translateX(-50%) translateY(0);}
+
+  /* RESPONSIVE */
+  @media(max-width:900px){
+    .hero{grid-template-columns:1fr;}
+    .hero-right{display:none;}
+    .footer-grid{grid-template-columns:1fr 1fr;}
+    .steps::before{display:none;}
+    .steps{flex-direction:column;gap:2rem;}
+    .series-grid{flex-direction:column;}
+    nav .nav-links{display:none;}
+  }
+  @media(max-width:600px){
+    .footer-grid{grid-template-columns:1fr;}
+    .hero-stats{gap:1rem;}
+  }
+
+  /* SCROLL ANIMATIONS */
+  .fade-in{opacity:0;transform:translateY(30px);transition:opacity 0.6s,transform 0.6s;}
+  .fade-in.visible{opacity:1;transform:translateY(0);}
+</style>
+</head>
+<body>
+
+<!-- ANNOUNCE -->
+<div class="announce">🔥 Launch Special: 30% OFF All eBooks — Use Code MANGA30 at Checkout</div>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-logo">Manga<span>Meals</span></div>
+  <ul class="nav-links">
+    <li><a href="#books">Books</a></li>
+    <li><a href="#series">By Anime</a></li>
+    <li><a href="#recipes">Free Recipes</a></li>
+    <li><a href="#bundles">Bundles</a></li>
+  </ul>
+  <div style="display:flex;align-items:center;gap:1rem;">
+    <button class="cart-btn" onclick="toggleCart()">
+      🛒
+      <span class="cart-count" id="cartCount">0</span>
+    </button>
+    <button class="nav-cta" onclick="document.getElementById('books').scrollIntoView({behavior:'smooth'})">Shop Now</button>
+  </div>
+</nav>
+
+<!-- CART -->
+<div class="cart-overlay" id="cartOverlay" onclick="handleCartOverlayClick(event)">
+  <div class="cart-sidebar">
+    <div class="cart-header">
+      <h3>Your Cart</h3>
+      <button class="cart-close" onclick="toggleCart()">✕</button>
+    </div>
+    <div class="cart-items" id="cartItems">
+      <div class="cart-empty">
+        <span>📦</span>
+        <p>Your cart is empty</p>
+        <p style="font-size:0.85rem;margin-top:4px;">Add some recipes to get cooking!</p>
+      </div>
+    </div>
+    <div class="cart-footer">
+      <div class="cart-total">
+        <span>Total</span>
+        <span id="cartTotal">$0.00</span>
+      </div>
+      <button class="btn-checkout" onclick="handleCheckout()">Proceed to Checkout</button>
+    </div>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<!-- HERO -->
+<section class="hero speed-bg" style="padding-top:88px;">
+  <div class="hero-halftone"></div>
+  <div class="hero-left">
+    <div class="hero-tag">🍜 High Protein · Anime Inspired</div>
+    <h1 class="hero-title">Cook Like<br>Your <span class="accent">Favorite</span><br>Hero</h1>
+    <p class="hero-subtitle">マンガミールズ — MANGA MEALS</p>
+    <p class="hero-desc">High-protein recipes straight from the most iconic anime kitchens. From Naruto's ramen to Demon Slayer's wild boar stew — fuel your training arc.</p>
+    <div class="hero-btns">
+      <a href="#books" class="btn-primary">Browse eBooks</a>
+      <a href="#recipes" class="btn-secondary">Free Recipes</a>
+    </div>
+    <div class="hero-stats">
+      <div class="hero-stat"><strong>12+</strong><span>eBooks</span></div>
+      <div class="hero-stat"><strong>200+</strong><span>Recipes</span></div>
+      <div class="hero-stat"><strong>30g+</strong><span>Protein avg.</span></div>
+      <div class="hero-stat"><strong>4.9★</strong><span>Rating</span></div>
+    </div>
+  </div>
+  <div class="hero-right">
+    <div class="hero-comic">
+      <div class="comic-panel tall" style="background:#1a1a1a;">
+        <div style="text-align:center;">
+          <div style="font-size:5rem;">🍜</div>
+          <div style="font-family:'Bebas Neue',sans-serif;font-size:1.2rem;color:white;letter-spacing:2px;margin-top:8px;">NARUTO RAMEN</div>
+          <div style="font-size:0.75rem;color:rgba(255,255,255,0.5);margin-top:4px;">42g PROTEIN</div>
+        </div>
+        <div class="sfx">ITADAKIMASU!</div>
+        <div class="panel-label">Vol. 1 — Konoha Kitchen</div>
+      </div>
+      <div class="comic-panel" style="background:#8B0000;">
+        <div style="text-align:center;">
+          <div style="font-size:3rem;">🥩</div>
+          <div style="font-family:'Bebas Neue',sans-serif;font-size:1rem;color:white;letter-spacing:1px;margin-top:4px;">WILD BOAR STEW</div>
+        </div>
+        <div class="sfx" style="font-size:1.1rem;top:6px;right:6px;">UMAI!</div>
+      </div>
+      <div class="comic-panel" style="background:#1B3A4B;">
+        <div style="text-align:center;">
+          <div style="font-size:3rem;">🍱</div>
+          <div style="font-family:'Bebas Neue',sans-serif;font-size:1rem;color:white;letter-spacing:1px;margin-top:4px;">BENTO BOX</div>
+        </div>
+        <div class="sfx" style="font-size:1.1rem;top:6px;right:6px;color:#7DF9FF;">YAK!</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FEATURED BOOKS -->
+<section id="books">
+  <div class="section-header fade-in">
+    <div class="section-tag">⚡ eBook Collection</div>
+    <h2 class="section-title">Choose Your Volume</h2>
+    <p class="section-sub">Each eBook is packed with 15–30 high-protein recipes inspired by an anime universe</p>
+  </div>
+  <div class="books-grid fade-in">
+    <!-- Book 1 -->
+    <div class="book-card">
+      <div class="book-cover red">
+        <span style="font-size:5rem;">🍜</span>
+        <div class="book-badge new">NEW</div>
+      </div>
+      <div class="book-info">
+        <div class="book-series">Naruto Universe</div>
+        <div class="book-title">Konoha Kitchen:<br>Ninja Fuel Recipes</div>
+        <div class="book-meta">
+          <span class="protein-badge">28 Recipes</span>
+          <span>• Avg 38g protein</span>
+        </div>
+        <div style="font-size:0.85rem;color:var(--gray);line-height:1.6;">
+          Ichiraku Ramen, Choji's BBQ, Hinata's Hyuga Broth and more. Train like a Hokage.
+        </div>
+        <div class="book-footer">
+          <div class="book-price">$9.99</div>
+          <button class="btn-buy" onclick="addToCart('Konoha Kitchen', 9.99, '🍜')">Add to Cart</button>
+        </div>
+      </div>
+    </div>
+    <!-- Book 2 -->
+    <div class="book-card">
+      <div class="book-cover dark">
+        <span style="font-size:5rem;">⚔️</span>
+        <div class="book-badge" style="background:var(--gold);border-color:var(--gold);">BESTSELLER</div>
+      </div>
+      <div class="book-info">
+        <div class="book-series">Demon Slayer</div>
+        <div class="book-title">Tanjiro's Training<br>Table</div>
+        <div class="book-meta">
+          <span class="protein-badge">24 Recipes</span>
+          <span>• Avg 45g protein</span>
+        </div>
+        <div style="font-size:0.85rem;color:var(--gray);line-height:1.6;">
+          Wild boar stew, Nezuko's sweet rice balls, and the Flame Hashira's fire chicken bowl.
+        </div>
+        <div class="book-footer">
+          <div class="book-price">$9.99</div>
+          <button class="btn-buy" onclick="addToCart('Tanjiro\'s Training Table', 9.99, '⚔️')">Add to Cart</button>
+        </div>
+      </div>
+    </div>
+    <!-- Book 3 -->
+    <div class="book-card">
+      <div class="book-cover gold">
+        <span style="font-size:5rem;">🍙</span>
+      </div>
+      <div class="book-info">
+        <div class="book-series">My Hero Academia</div>
+        <div class="book-title">Hero Course<br>Meal Prep</div>
+        <div class="book-meta">
+          <span class="protein-badge">22 Recipes</span>
+          <span>• Avg 40g protein</span>
+        </div>
+        <div style="font-size:0.85rem;color:var(--gray);line-height:1.6;">
+          Midoriya's Katsu curry, All Might's power bowl, and UA cafeteria specials.
+        </div>
+        <div class="book-footer">
+          <div class="book-price">$9.99</div>
+          <button class="btn-buy" onclick="addToCart('Hero Course Meal Prep', 9.99, '🍙')">Add to Cart</button>
+        </div>
+      </div>
+    </div>
+    <!-- Book 4 -->
+    <div class="book-card">
+      <div class="book-cover cream">
+        <span style="font-size:5rem;">🥟</span>
+      </div>
+      <div class="book-info">
+        <div class="book-series">Attack on Titan</div>
+        <div class="book-title">Survey Corps<br>Survival Meals</div>
+        <div class="book-meta">
+          <span class="protein-badge">20 Recipes</span>
+          <span>• Avg 42g protein</span>
+        </div>
+        <div style="font-size:0.85rem;color:var(--gray);line-height:1.6;">
+          Walls-era stew, Hange's experimental protein bar, and Eren's mom's bread-stuffed goodness.
+        </div>
+        <div class="book-footer">
+          <div class="book-price">$9.99</div>
+          <button class="btn-buy" onclick="addToCart('Survey Corps Survival Meals', 9.99, '🥟')">Add to Cart</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SERIES SECTION -->
+<section id="series" class="series-section">
+  <div class="section-header fade-in" style="margin-bottom:3rem;">
+    <div class="section-tag" style="background:var(--red);">🎌 Browse by Anime</div>
+    <h2 class="section-title" style="color:var(--white);">Choose Your Universe</h2>
+  </div>
+  <div class="series-grid fade-in">
+    <div class="series-item">
+      <div class="series-icon">🍜</div>
+      <div class="series-name">Naruto</div>
+      <div class="series-jp">ナルト</div>
+      <div class="series-count">3 Books Available</div>
+    </div>
+    <div class="series-item">
+      <div class="series-icon">⚔️</div>
+      <div class="series-name">Demon Slayer</div>
+      <div class="series-jp">鬼滅の刃</div>
+      <div class="series-count">2 Books Available</div>
+    </div>
+    <div class="series-item">
+      <div class="series-icon">💪</div>
+      <div class="series-name">My Hero Academia</div>
+      <div class="series-jp">僕のヒーローアカデミア</div>
+      <div class="series-count">2 Books Available</div>
+    </div>
+    <div class="series-item">
+      <div class="series-icon">⚙️</div>
+      <div class="series-name">Attack on Titan</div>
+      <div class="series-jp">進撃の巨人</div>
+      <div class="series-count">2 Books Available</div>
+    </div>
+    <div class="series-item">
+      <div class="series-icon">🌊</div>
+      <div class="series-name">One Piece</div>
+      <div class="series-jp">ワンピース</div>
+      <div class="series-count">Coming Soon</div>
+    </div>
+  </div>
+</section>
+
+<!-- MANIFESTO -->
+<div class="manifesto">
+  <h2>Eat Like<br>An <em style="font-style:normal;text-decoration:underline;text-decoration-color:rgba(255,255,255,0.4);">Anime</em><br>Protagonist</h2>
+  <p>Every hero has their signature dish. Every training arc has its fuel. We turned the most iconic anime meals into real, high-protein recipes you can actually cook — no chakra required.</p>
+  <a href="#books" class="btn-primary" style="background:var(--white);color:var(--ink);">Start Your Arc</a>
+</div>
+
+<!-- HOW IT WORKS -->
+<section>
+  <div class="section-header fade-in">
+    <div class="section-tag">📖 Simple Process</div>
+    <h2 class="section-title">How It Works</h2>
+  </div>
+  <div class="steps fade-in">
+    <div class="step">
+      <div class="step-num">1</div>
+      <h3>Choose Your eBook</h3>
+      <p>Pick a single volume or grab the full bundle. Each book covers a different anime universe.</p>
+    </div>
+    <div class="step">
+      <div class="step-num">2</div>
+      <h3>Pay Your Way</h3>
+      <p>Pay via Click, Payme, USDT crypto, or Payoneer. No registration, no hassle.</p>
+    </div>
+    <div class="step">
+      <div class="step-num">3</div>
+      <h3>Instant Download</h3>
+      <p>Get your PDF eBook instantly after payment. Cook anywhere, anytime, on any device.</p>
+    </div>
+    <div class="step">
+      <div class="step-num">4</div>
+      <h3>Level Up</h3>
+      <p>Follow the macros, hit your protein goals, and unlock your protagonist energy.</p>
+    </div>
+  </div>
+</section>
+
+<!-- SAMPLE RECIPES -->
+<section id="recipes" class="recipes-section">
+  <div class="section-header fade-in">
+    <div class="section-tag">🎁 Free Preview</div>
+    <h2 class="section-title">Sample Recipes</h2>
+    <p class="section-sub">A taste of what's inside — full recipes in the eBooks</p>
+  </div>
+  <div class="recipe-grid fade-in">
+    <div class="recipe-card">
+      <div class="recipe-header">
+        <div class="recipe-icon">🍜</div>
+        <div>
+          <div class="recipe-source">Naruto · Konoha Arc</div>
+          <div class="recipe-name">Ichiraku Tonkotsu Ramen</div>
+        </div>
+      </div>
+      <p style="font-size:0.85rem;color:var(--gray);line-height:1.6;">Rich pork bone broth with chicken chashu, soft-boiled egg and bamboo shoots. Naruto's ultimate comfort bowl — now protein-optimized.</p>
+      <div class="recipe-tags">
+        <span class="tag protein">42g Protein</span>
+        <span class="tag time">45 min</span>
+        <span class="tag diff">Medium</span>
+      </div>
+      <div class="recipe-macros">
+        <div class="macro"><strong>42g</strong><span>Protein</span></div>
+        <div class="macro"><strong>580</strong><span>Calories</span></div>
+        <div class="macro"><strong>48g</strong><span>Carbs</span></div>
+      </div>
+    </div>
+    <div class="recipe-card">
+      <div class="recipe-header">
+        <div class="recipe-icon">🥩</div>
+        <div>
+          <div class="recipe-source">Demon Slayer · Taisho Era</div>
+          <div class="recipe-name">Wild Boar Warrior Stew</div>
+        </div>
+      </div>
+      <p style="font-size:0.85rem;color:var(--gray);line-height:1.6;">Slow-cooked pork shoulder in miso broth with root vegetables. The Flame Hashira approved — protein dense, battle-ready fuel.</p>
+      <div class="recipe-tags">
+        <span class="tag protein">55g Protein</span>
+        <span class="tag time">90 min</span>
+        <span class="tag diff">Easy</span>
+      </div>
+      <div class="recipe-macros">
+        <div class="macro"><strong>55g</strong><span>Protein</span></div>
+        <div class="macro"><strong>620</strong><span>Calories</span></div>
+        <div class="macro"><strong>22g</strong><span>Carbs</span></div>
+      </div>
+    </div>
+    <div class="recipe-card">
+      <div class="recipe-header">
+        <div class="recipe-icon">🍱</div>
+        <div>
+          <div class="recipe-source">My Hero Academia · UA High</div>
+          <div class="recipe-name">Midoriya's Power Bento</div>
+        </div>
+      </div>
+      <p style="font-size:0.85rem;color:var(--gray);line-height:1.6;">Teriyaki chicken, edamame rice, tamago and pickled daikon. The UA cafeteria special that powered Deku through his Plus Ultra moments.</p>
+      <div class="recipe-tags">
+        <span class="tag protein">48g Protein</span>
+        <span class="tag time">30 min</span>
+        <span class="tag diff">Easy</span>
+      </div>
+      <div class="recipe-macros">
+        <div class="macro"><strong>48g</strong><span>Protein</span></div>
+        <div class="macro"><strong>510</strong><span>Calories</span></div>
+        <div class="macro"><strong>55g</strong><span>Carbs</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- BUNDLES -->
+<section id="bundles" class="bundle-section">
+  <div class="section-header fade-in">
+    <div class="section-tag">💥 Bundle & Save</div>
+    <h2 class="section-title" style="color:var(--white);">Choose Your Arc</h2>
+    <p class="section-sub" style="color:rgba(255,255,255,0.5);">Save more when you commit to the full training arc</p>
+  </div>
+  <div class="bundle-grid fade-in">
+    <div class="bundle-card">
+      <div class="bundle-name">Genin Pack</div>
+      <div class="bundle-jp">下忍パック</div>
+      <div class="bundle-price">$9<span style="font-size:1.5rem;">.99</span></div>
+      <div class="bundle-period">single ebook</div>
+      <ul class="bundle-features">
+        <li>1 anime universe eBook</li>
+        <li>15–28 high-protein recipes</li>
+        <li>Full macro breakdowns</li>
+        <li>PDF instant download</li>
+      </ul>
+      <button class="btn-bundle" onclick="document.getElementById('books').scrollIntoView({behavior:'smooth'})">Pick a Book</button>
+    </div>
+    <div class="bundle-card featured">
+      <div class="featured-tag">MOST POPULAR</div>
+      <div class="bundle-name">Chunin Bundle</div>
+      <div class="bundle-jp">中忍バンドル</div>
+      <div class="bundle-price">$24<span style="font-size:1.5rem;">.99</span></div>
+      <div class="bundle-period">any 3 ebooks — save 17%</div>
+      <ul class="bundle-features">
+        <li>3 anime universe eBooks</li>
+        <li>60–80 high-protein recipes</li>
+        <li>Full macro breakdowns</li>
+        <li>PDF instant download</li>
+        <li>4-week meal plan bonus</li>
+      </ul>
+      <button class="btn-bundle" onclick="addToCart('Chunin Bundle (3 eBooks)', 24.99, '📦')">Add Bundle to Cart</button>
+    </div>
+    <div class="bundle-card">
+      <div class="bundle-name">Jonin Mega Pack</div>
+      <div class="bundle-jp">上忍メガパック</div>
+      <div class="bundle-price">$39<span style="font-size:1.5rem;">.99</span></div>
+      <div class="bundle-period">all 12 ebooks — save 67%</div>
+      <ul class="bundle-features">
+        <li>All 12 anime universe eBooks</li>
+        <li>200+ high-protein recipes</li>
+        <li>Full macro breakdowns</li>
+        <li>PDF instant download</li>
+        <li>12-week training meal plan</li>
+        <li>Free lifetime updates</li>
+      </ul>
+      <button class="btn-bundle" onclick="addToCart('Jonin Mega Pack (All eBooks)', 39.99, '🏆')">Add Mega Pack to Cart</button>
+    </div>
+  </div>
+  <!-- PAYMENT METHODS -->
+  <div style="text-align:center;margin-top:4rem;" class="fade-in">
+    <p style="color:rgba(255,255,255,0.4);font-size:0.8rem;letter-spacing:2px;text-transform:uppercase;margin-bottom:1.5rem;">Accepted Payment Methods</p>
+    <div style="display:flex;gap:1rem;justify-content:center;flex-wrap:wrap;">
+      <div style="background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.15);padding:0.6rem 1.2rem;font-size:0.85rem;font-weight:600;color:rgba(255,255,255,0.7);">💳 Click UZ</div>
+      <div style="background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.15);padding:0.6rem 1.2rem;font-size:0.85rem;font-weight:600;color:rgba(255,255,255,0.7);">💳 Payme</div>
+      <div style="background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.15);padding:0.6rem 1.2rem;font-size:0.85rem;font-weight:600;color:rgba(255,255,255,0.7);">🏦 Uzcard / Humo</div>
+      <div style="background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.15);padding:0.6rem 1.2rem;font-size:0.85rem;font-weight:600;color:rgba(255,255,255,0.7);">🌍 Payoneer</div>
+      <div style="background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.15);padding:0.6rem 1.2rem;font-size:0.85rem;font-weight:600;color:rgba(255,255,255,0.7);">🔐 USDT Crypto</div>
+    </div>
+  </div>
+</section>
+
+<!-- TESTIMONIALS -->
+<section class="testi-section">
+  <div class="section-header fade-in">
+    <div class="section-tag">💬 Reviews</div>
+    <h2 class="section-title">The Community Says</h2>
+  </div>
+  <div class="testi-grid fade-in">
+    <div class="testi-card">
+      <div class="testi-quote">"</div>
+      <div class="stars">★★★★★</div>
+      <p class="testi-text">I've been making the Ichiraku ramen every week. My gym gains went crazy and it genuinely tastes like the anime version in my head. Absolutely worth it.</p>
+      <div class="testi-author">
+        <div class="testi-avatar">🇯🇵</div>
+        <div>
+          <div class="testi-name">Kenji M.</div>
+          <div class="testi-role">Powerlifter · Tokyo</div>
+        </div>
+      </div>
+    </div>
+    <div class="testi-card">
+      <div class="testi-quote">"</div>
+      <div class="stars">★★★★★</div>
+      <p class="testi-text">The Demon Slayer book is insane. Wild boar stew with 55g of protein per serving? I thought high protein meant boring food. MangaMeals changed that.</p>
+      <div class="testi-author">
+        <div class="testi-avatar">🇺🇿</div>
+        <div>
+          <div class="testi-name">Akbar T.</div>
+          <div class="testi-role">Fitness Coach · Tashkent</div>
+        </div>
+      </div>
+    </div>
+    <div class="testi-card">
+      <div class="testi-quote">"</div>
+      <div class="stars">★★★★★</div>
+      <p class="testi-text">Bought the Jonin Mega Pack and I've cooked from it every single week. The meal plan included is genuinely the best investment I've made for my bulking phase.</p>
+      <div class="testi-author">
+        <div class="testi-avatar">🇰🇷</div>
+        <div>
+          <div class="testi-name">Minjae L.</div>
+          <div class="testi-role">Bodybuilder · Seoul</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FAQ -->
+<section class="faq-section">
+  <div class="section-header fade-in">
+    <div class="section-tag">❓ FAQ</div>
+    <h2 class="section-title">Common Questions</h2>
+  </div>
+  <div class="faq-list fade-in">
+    <div class="faq-item">
+      <div class="faq-q" onclick="toggleFaq(this)">
+        What format are the eBooks? <span class="faq-icon">+</span>
+      </div>
+      <div class="faq-a">All eBooks are delivered as high-quality PDF files. You can read them on your phone, tablet, laptop, or print them out. No special app required.</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q" onclick="toggleFaq(this)">
+        How do I receive my eBook after purchase? <span class="faq-icon">+</span>
+      </div>
+      <div class="faq-a">After payment is confirmed, you'll receive a download link via email or Telegram (depending on which payment method you use). Usually within 5 minutes.</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q" onclick="toggleFaq(this)">
+        Which payment methods are accepted? <span class="faq-icon">+</span>
+      </div>
+      <div class="faq-a">We accept Click UZ, Payme, Uzcard/Humo direct transfer, Payoneer (for international), and USDT crypto (TRC20). We're working on adding more methods soon.</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q" onclick="toggleFaq(this)">
+        Are these recipes for beginners? <span class="faq-icon">+</span>
+      </div>
+      <div class="faq-a">Yes! Every recipe includes a difficulty rating (Easy, Medium, Hard). Most recipes are beginner-friendly and designed for people who want to eat well without being professional chefs.</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q" onclick="toggleFaq(this)">
+        Do you offer refunds? <span class="faq-icon">+</span>
+      </div>
+      <div class="faq-a">Because these are digital products, we generally don't offer refunds after download. However if there's a problem with your file, contact us and we'll sort it immediately.</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q" onclick="toggleFaq(this)">
+        Can I contact you on Telegram? <span class="faq-icon">+</span>
+      </div>
+      <div class="faq-a">Yes! Telegram is actually our fastest support channel. Message us @MangaMealsShop for order help, payment questions, or just to share your cooking pics.</div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-grid">
+    <div class="footer-brand">
+      <div class="nav-logo">Manga<span style="color:var(--red);">Meals</span></div>
+      <p>High-protein recipes inspired by the greatest anime universes. Cook like a protagonist. Eat like a champion.</p>
+      <div class="footer-social">
+        <div class="social-btn">📸</div>
+        <div class="social-btn">✈️</div>
+        <div class="social-btn">▶️</div>
+        <div class="social-btn">🐦</div>
+      </div>
+    </div>
+    <div class="footer-col">
+      <h4>Shop</h4>
+      <ul>
+        <li><a href="#books">All eBooks</a></li>
+        <li><a href="#bundles">Bundles</a></li>
+        <li><a href="#series">By Anime</a></li>
+        <li><a href="#">New Releases</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4>Free Stuff</h4>
+      <ul>
+        <li><a href="#recipes">Sample Recipes</a></li>
+        <li><a href="#">Meal Planner</a></li>
+        <li><a href="#">Protein Calculator</a></li>
+        <li><a href="#">Blog</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4>Support</h4>
+      <ul>
+        <li><a href="#">Contact Us</a></li>
+        <li><a href="#">Telegram: @MangaMealsShop</a></li>
+        <li><a href="#">Refund Policy</a></li>
+        <li><a href="#">Terms of Use</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <p>© 2025 MangaMeals. All rights reserved. Made with 🍜 in Uzbekistan.</p>
+    <p>Not affiliated with any anime studio or IP holder.</p>
+  </div>
+</footer>
+
+<script>
+// ── CART ──────────────────────────────────────────────
+let cart = [];
+
+function addToCart(name, price, icon) {
+  const existing = cart.find(i => i.name === name);
+  if (existing) {
+    existing.qty++;
+  } else {
+    cart.push({ name, price, icon, qty: 1 });
+  }
+  updateCart();
+  showToast('Added: ' + name);
+}
+
+function removeFromCart(name) {
+  cart = cart.filter(i => i.name !== name);
+  updateCart();
+}
+
+function updateCart() {
+  const countEl = document.getElementById('cartCount');
+  const itemsEl = document.getElementById('cartItems');
+  const totalEl = document.getElementById('cartTotal');
+  const total = cart.reduce((s, i) => s + i.price * i.qty, 0);
+  const count = cart.reduce((s, i) => s + i.qty, 0);
+
+  countEl.textContent = count;
+  totalEl.textContent = '$' + total.toFixed(2);
+
+  if (cart.length === 0) {
+    itemsEl.innerHTML = '<div class="cart-empty"><span>📦</span><p>Your cart is empty</p><p style="font-size:0.85rem;margin-top:4px;">Add some recipes to get cooking!</p></div>';
+    return;
+  }
+
+  itemsEl.innerHTML = cart.map(item => `
+    <div class="cart-item">
+      <div class="cart-item-icon">${item.icon}</div>
+      <div class="cart-item-info">
+        <div class="cart-item-title">${item.name}${item.qty > 1 ? ' x' + item.qty : ''}</div>
+        <div class="cart-item-price">$${(item.price * item.qty).toFixed(2)}</div>
+      </div>
+      <button class="cart-remove" onclick="removeFromCart('${item.name.replace(/'/g,'\\\'')}')" title="Remove">✕</button>
+    </div>
+  `).join('');
+}
+
+function toggleCart() {
+  document.getElementById('cartOverlay').classList.toggle('open');
+}
+
+function handleCartOverlayClick(e) {
+  if (e.target === document.getElementById('cartOverlay')) toggleCart();
+}
+
+function handleCheckout() {
+  if (cart.length === 0) { showToast('Your cart is empty!'); return; }
+  showToast('Redirecting to payment...');
+  setTimeout(() => {
+    alert('Checkout coming soon!\n\nPayment options:\n• Click UZ\n• Payme\n• USDT (TRC20)\n• Payoneer\n\nTelegram: @MangaMealsShop');
+  }, 800);
+}
+
+// ── TOAST ──────────────────────────────────────────────
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2500);
+}
+
+// ── FAQ ──────────────────────────────────────────────
+function toggleFaq(el) {
+  const item = el.parentElement;
+  const wasOpen = item.classList.contains('open');
+  document.querySelectorAll('.faq-item').forEach(i => i.classList.remove('open'));
+  if (!wasOpen) item.classList.add('open');
+}
+
+// ── SCROLL ANIMATIONS ──────────────────────────────────────────────
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(e => {
+    if (e.isIntersecting) { e.target.classList.add('visible'); }
+  });
+}, { threshold: 0.1 });
+document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+</script>
+</body>
+</html>
